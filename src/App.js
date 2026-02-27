@@ -1,14 +1,12 @@
-import React, { useState, useMemo, useContext, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { 
-  Box,
-  Typography
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { deepmerge } from '@mui/utils';
 
 import AppRouter from './components/AppRouter';
-import { ColorModeContext, NotificationProvider } from './contex'; 
+import { NotificationProvider } from './contex';
 
 import { inputsCustomizations } from './shared-theme/customizations/inputs';
 import { dataDisplayCustomizations } from './shared-theme/customizations/dataDisplay';
@@ -16,15 +14,15 @@ import { feedbackCustomizations } from './shared-theme/customizations/feedback';
 import { navigationCustomizations } from './shared-theme/customizations/navigation';
 import { surfacesCustomizations } from './shared-theme/customizations/surfaces';
 import { colorSchemes, typography, shadows, shape } from './shared-theme/themePrimitives';
+import ColorModeSelect from './shared-theme/ColorModeSelect';
 
-function ThemeEditor() {
-  const { setCustomColor, mode } = useContext(ColorModeContext);
+function ThemeEditor({ onColorChange }) {
   const [localColor, setLocalColor] = useState(localStorage.getItem('customPrimary') || '#1976d2');
 
   const handleColorChange = (e) => {
     const newColor = e.target.value;
     setLocalColor(newColor);
-    setCustomColor(newColor);
+    onColorChange(newColor);
   };
 
   return (
@@ -53,50 +51,57 @@ function ThemeEditor() {
   );
 }
 
-export function App() {
-  const [mode, setMode] = useState(() => {
-    return localStorage.getItem('themeMode') || 'light';
-  });
-  
+function App() {
   const [primaryColor, setPrimaryColor] = useState(() => {
     return localStorage.getItem('customPrimary') || '#1976d2';
   });
 
   const customColorSchemes = useMemo(() => {
-    const schemes = {
+    return {
       light: {
         palette: {
+          primary: { 
+            main: primaryColor,
+            light: primaryColor, 
+            dark: primaryColor,   
+          },
+          secondary: { main: '#9c27b0' },
           ...colorSchemes.light.palette,
-          primary: {
-            main: primaryColor || colorSchemes.light.palette.primary.main,
-          }
-        }
+        },
       },
       dark: {
         palette: {
+          primary: { 
+            main: primaryColor,
+            light: primaryColor,
+            dark: primaryColor,
+          },
+          secondary: { main: '#9c27b0' },
           ...colorSchemes.dark.palette,
-          primary: {
-            main: primaryColor || colorSchemes.dark.palette.primary.main,
-          }
-        }
-      }
+        },
+      },
     };
-    
-    return schemes;
   }, [primaryColor]);
 
   const theme = useMemo(() => {
-    return createTheme({
-      palette: {
-        mode: mode,
-        primary: {
-          main: primaryColor,
-        },
-        secondary: {
-          main: '#9c27b0',
-        },
+    const baseTheme = createTheme({
+      cssVariables: {
+        colorSchemeSelector: 'data-mui-color-scheme',
+        cssVarPrefix: 'app',
       },
+      colorSchemes: customColorSchemes,
+      typography,
+      shadows,
+      shape,
+    });
+
+    const themeWithComponents = deepmerge(baseTheme, {
       components: {
+        ...inputsCustomizations,
+        ...dataDisplayCustomizations,
+        ...feedbackCustomizations,
+        ...navigationCustomizations,
+        ...surfacesCustomizations,
         MuiCssBaseline: {
           styleOverrides: {
             body: {
@@ -109,38 +114,29 @@ export function App() {
         },
       },
     });
-  }, [mode, primaryColor]); 
 
-  const colorMode = useMemo(() => ({
-    mode,
-    toggleColorMode: () => {
-      setMode((prevMode) => {
-        const next = prevMode === 'light' ? 'dark' : 'light';
-        localStorage.setItem('themeMode', next);
-        return next;
-      });
-    },
-    setCustomColor: (hex) => {
-      setPrimaryColor(hex);
-      localStorage.setItem('customPrimary', hex);
-    }
-  }), [mode]);
+    return themeWithComponents;
+  }, [customColorSchemes]);
+
+  const handleColorChange = (newColor) => {
+    setPrimaryColor(newColor);
+    localStorage.setItem('customPrimary', newColor);
+  };
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider 
-        theme={theme} 
-        disableTransitionOnChange={false} 
-      >
-        <CssBaseline />
-        <BrowserRouter>
-          <NotificationProvider>
-            <ThemeEditor />
-            <AppRouter />
-          </NotificationProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </ColorModeContext.Provider>
+    <ThemeProvider theme={theme} disableTransitionOnChange={false}>
+      <CssBaseline />
+      
+      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }} />
+      
+      <ThemeEditor onColorChange={handleColorChange} />
+      
+      <BrowserRouter>
+        <NotificationProvider>
+          <AppRouter />
+        </NotificationProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
