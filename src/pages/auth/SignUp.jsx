@@ -127,8 +127,7 @@ export default function SignUp() {
   };
 
   return (
-    <AppTheme {...colorMode}>
-      <CssBaseline enableColorScheme />
+    <>
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
@@ -144,6 +143,7 @@ export default function SignUp() {
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
+
             <FormControl>
               <FormLabel htmlFor="name">Full name</FormLabel>
               <TextField
@@ -235,6 +235,6 @@ export default function SignUp() {
           </Box>
         </Card>
       </SignUpContainer>
-    </AppTheme>
+    </>
   );
 }

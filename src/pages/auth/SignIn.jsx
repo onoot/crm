@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '../../UI/CustomIcons';
 import ForgotPassword from '../../UI/ForgotPassword';
@@ -122,10 +121,9 @@ export default function SignIn(pops) {
   };
 
   return (
-    <AppTheme {...colorMode}>
-      <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
+       <>
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <Typography
             component="h1"
@@ -233,6 +231,6 @@ export default function SignIn(pops) {
           </Box>
         </Card>
       </SignInContainer>
-    </AppTheme>
+       </>
   );
 }

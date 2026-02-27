@@ -59,7 +59,7 @@ export function App() {
   });
   
   const [primaryColor, setPrimaryColor] = useState(() => {
-    return localStorage.getItem('customPrimary') || null;
+    return localStorage.getItem('customPrimary') || '#1976d2';
   });
 
   const customColorSchemes = useMemo(() => {
