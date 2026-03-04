@@ -12,10 +12,8 @@ const Tpl_main = (props) => {
     return (
         <>
             <Box component="main">
-                <Box sx={{ flexGrow: 1, p: 3, mt: 8 }}>
                     <PageHeader open={open} setOpen={setOpen}/>
                     <Asaid position="fixed" open={open} setOpen={setOpen}/>
-                </Box>
                 {page}
 
             </Box>

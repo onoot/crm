@@ -16,40 +16,6 @@ import { surfacesCustomizations } from './shared-theme/customizations/surfaces';
 import { colorSchemes, typography, shadows, shape } from './shared-theme/themePrimitives';
 import ColorModeSelect from './shared-theme/ColorModeSelect';
 
-function ThemeEditor({ onColorChange }) {
-  const [localColor, setLocalColor] = useState(localStorage.getItem('customPrimary') || '#1976d2');
-
-  const handleColorChange = (e) => {
-    const newColor = e.target.value;
-    setLocalColor(newColor);
-    onColorChange(newColor);
-  };
-
-  return (
-    <Box sx={{ 
-      position: 'fixed', 
-      top: 20, 
-      left: 60, 
-      zIndex: 9999, 
-      bgcolor: 'background.paper',
-      p: 1.5, 
-      borderRadius: 2, 
-      border: '1px solid',
-      borderColor: 'divider',
-      boxShadow: 1
-    }}>
-      <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
-        Цвет темы:
-      </Typography>
-      <input 
-        type="color" 
-        value={localColor}
-        onChange={handleColorChange}
-        style={{ width: '100%', height: '40px', cursor: 'pointer' }}
-      />
-    </Box>
-  );
-}
 
 function App() {
   const [primaryColor, setPrimaryColor] = useState(() => {
@@ -118,18 +84,12 @@ function App() {
     return themeWithComponents;
   }, [customColorSchemes]);
 
-  const handleColorChange = (newColor) => {
-    setPrimaryColor(newColor);
-    localStorage.setItem('customPrimary', newColor);
-  };
-
+ 
   return (
     <ThemeProvider theme={theme} disableTransitionOnChange={false}>
       <CssBaseline />
       
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }} />
-      
-      <ThemeEditor onColorChange={handleColorChange} />
+      {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 9999 }} /> */}
       
       <BrowserRouter>
         <NotificationProvider>

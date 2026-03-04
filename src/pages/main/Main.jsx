@@ -1,30 +1,69 @@
-import React from "react";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import MuiCard from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
-import ColorModeSelect from '../../shared-theme/ColorModeSelect';
+import React, { useState } from 'react';
+ import { alpha } from '@mui/material/styles';
+import MainGrid from '../../components/MainGrid';
+import {
+  Box,
+  Divider,
+  Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Stack,
+  IconButton,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
+import {
+  Refresh as RefreshIcon,
+  LocalHospital as LocalHospitalIcon,
+  CalendarMonth as CalendarMonthIcon,
+  AccessTime as AccessTimeIcon,
+  CalendarToday as CalendarTodayIcon,
+  AttachMoney as AttachMoneyIcon,
+  Group as GroupIcon,
+  MedicalServices as MedicalServicesIcon
+} from '@mui/icons-material';
+import { 
+    Card,
+    SignInContainer,
+} from '../../UI/card';
 
-import { useContext } from 'react';
-import { useTheme } from '@mui/material/styles';
-import { ColorModeContext } from '../../contex';
 
-const Main = ()=>{
+const Main = () => {
+  const theme = useTheme();
+ 
 
-    return(
-        <>
-        </>
-    )
-}
+  return (
+    <SignInContainer direction="column" justifyContent="space-between">
+      <Box sx={{ display: 'flex' }}>
+        {/* Main content */}
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+          })}
+        >
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: 'center',
+              mx: 3,
+              pb: 5,
+              mt: { xs: 8, md: 0 },
+            }}
+          >
+            <MainGrid />
+          </Stack>
+        </Box>
+      </Box>
+    </SignInContainer>
+  );
+};
 
 export default Main;
